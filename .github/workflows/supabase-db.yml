@@ -1,0 +1,58 @@
+name: Supabase DB CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/supabase-db.yml'
+  pull_request:
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/supabase-db.yml'
+
+jobs:
+  smoke-test:
+    name: Migrations & Smoke Test (Postgres)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: bangunku_ci
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create database
+        run: psql -c "CREATE DATABASE $PGDATABASE"
+
+      - name: Apply stubs (auth & storage ala Supabase)
+        run: psql -v ON_ERROR_STOP=1 -f .github/supabase-stubs/stubs.sql
+
+      - name: Apply migrations
+        run: |
+          for f in supabase/migrations/*.sql; do
+            echo "--- $f"
+            psql -q -v ON_ERROR_STOP=1 -f "$f"
+          done
+
+      - name: Apply seed twice (idempotency)
+        run: |
+          psql -v ON_ERROR_STOP=1 -f supabase/seed.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/seed.sql
+
+      - name: Smoke test RLS, entitlement, LWW, audit
+        run: psql -v ON_ERROR_STOP=1 -f .github/supabase-stubs/smoke.sql

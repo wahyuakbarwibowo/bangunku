@@ -1,0 +1,42 @@
+name: Admin Web CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/admin-web/**'
+      - 'packages/shared-types/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/admin-web.yml'
+  pull_request:
+    paths:
+      - 'apps/admin-web/**'
+      - 'packages/shared-types/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/admin-web.yml'
+
+jobs:
+  check:
+    name: Typecheck & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck shared types
+        run: npm run typecheck -w @bangunku/shared-types
+
+      - name: Svelte check
+        run: npm run check -w bangunku-admin-web
+
+      - name: Build admin web
+        run: npm run build -w bangunku-admin-web
