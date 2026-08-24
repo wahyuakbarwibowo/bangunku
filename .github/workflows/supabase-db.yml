@@ -1,15 +1,7 @@
 name: Supabase DB CI
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'supabase/**'
-      - '.github/workflows/supabase-db.yml'
-  pull_request:
-    paths:
-      - 'supabase/**'
-      - '.github/workflows/supabase-db.yml'
+  workflow_dispatch:
 
 jobs:
   smoke-test:

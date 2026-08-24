@@ -1,21 +1,7 @@
 name: Admin Web CI
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'apps/admin-web/**'
-      - 'packages/shared-types/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/admin-web.yml'
-  pull_request:
-    paths:
-      - 'apps/admin-web/**'
-      - 'packages/shared-types/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/admin-web.yml'
+  workflow_dispatch:
 
 jobs:
   check:
