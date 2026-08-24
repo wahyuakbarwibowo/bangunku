@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BangunKu</string>
+    <string name="nav_beranda">Beranda</string>
+    <string name="nav_proyek">Proyek</string>
+    <string name="nav_rab">RAB</string>
+    <string name="nav_pengeluaran">Pengeluaran</string>
+    <string name="nav_lainnya">Lainnya</string>
+</resources>
