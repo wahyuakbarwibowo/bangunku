@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Builds & generated
+build/
+dist/
+.next/
+.svelte-kit/
+vite.config.ts.timestamp-*
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Android
+local.properties
+.gradle/
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+captures/
+.cxx/
+
+# IDE
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+
+# OS / misc
+.DS_Store
+Thumbs.db
+.forgeguard/
+*.log
