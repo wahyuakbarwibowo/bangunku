@@ -1,0 +1,13 @@
+{
+  "name": "bangunku",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/admin-web",
+    "packages/shared-types"
+  ],
+  "scripts": {
+    "check": "npm run typecheck -w @bangunku/shared-types && npm run check -w bangunku-admin-web",
+    "build": "npm run build -w bangunku-admin-web"
+  }
+}
