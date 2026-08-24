@@ -43,13 +43,13 @@ create policy organization_members_delete_admin on public.organization_members
 alter table public.projects enable row level security;
 
 create policy projects_select on public.projects
-  for select using (app.can_access_project(id));
+  for select using (app.org_role(organization_id) is not null);
 
 create policy projects_insert on public.projects
   for insert with check (app.can_write_org(organization_id));
 
 create policy projects_update on public.projects
-  for update using (app.can_write_project(id));
+  for update using (app.org_role(organization_id) in ('OWNER', 'ADMIN', 'MEMBER'));
 
 alter table public.budget_categories enable row level security;
 
@@ -162,6 +162,25 @@ revoke all on public.plans,
   public.admin_users,
   public.audit_logs
 from anon, authenticated;
+
+grant usage on schema public to authenticated;
+
+grant select, insert, update, delete on
+  public.profiles,
+  public.organizations,
+  public.organization_members,
+  public.projects,
+  public.budget_categories,
+  public.budget_items,
+  public.expenses,
+  public.progress_items,
+  public.materials,
+  public.workers,
+  public.worker_payments,
+  public.project_documents,
+  public.notifications,
+  public.notification_targets
+to authenticated;
 
 insert into storage.buckets (id, name, public)
 values ('documents', 'documents', false), ('avatars', 'avatars', true)
